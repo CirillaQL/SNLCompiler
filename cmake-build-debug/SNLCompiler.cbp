@@ -85,6 +85,9 @@
 		<Unit filename="/home/qianlu/CLionProjects/SNLCompiler/Scanner/FileReader.hpp">
 			<Option target="SNLCompiler"/>
 		</Unit>
+		<Unit filename="/home/qianlu/CLionProjects/SNLCompiler/Scanner/Token.hpp">
+			<Option target="SNLCompiler"/>
+		</Unit>
 		<Unit filename="/home/qianlu/CLionProjects/SNLCompiler/Scanner/Word.hpp">
 			<Option target="SNLCompiler"/>
 		</Unit>
