@@ -19,4 +19,6 @@ iostream
 /home/qianlu/CLionProjects/SNLCompiler/main.cpp
 Scanner/FileReader.hpp
 /home/qianlu/CLionProjects/SNLCompiler/Scanner/FileReader.hpp
+iostream
+-
 
