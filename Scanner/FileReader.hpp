@@ -10,29 +10,33 @@
 #include <fstream>
 #include <iostream>
 
-class FileReader{
+class FileReader {
 private:
     //采用vector来存储每一行的文本
     std::vector<std::string> SrcLine;
 public:
     FileReader();
+
     ~FileReader();
-    void ReadFile(const std::string& filename);
+
+    void ReadFile(const std::string &filename);
+
     const std::vector<std::string> &getSrcLine() const;
 };
 
 FileReader::FileReader() = default;
+
 FileReader::~FileReader() = default;
+
 void FileReader::ReadFile(const std::string &filename) {
     std::ifstream infile(filename);
     std::string line;
     //判断是否打开文件，之后读取
-    if (infile){
-        while (getline(infile,line)){
+    if (infile) {
+        while (getline(infile, line)) {
             SrcLine.push_back(line);
         }
-    }
-    else{
+    } else {
         std::cout << "文本文件未打开" << std::endl;
     }
 }
