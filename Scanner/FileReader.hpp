@@ -34,10 +34,14 @@ void FileReader::ReadFile(const std::string &filename) {
     //判断是否打开文件，之后读取
     if (infile) {
         while (getline(infile, line)) {
-            SrcLine.push_back(line);
+            std::string ans = line+'\n';
+            SrcLine.push_back(ans);
         }
     } else {
-        std::cout << "文本文件未打开" << std::endl;
+        throw std::invalid_argument("错误，无法打开源代码文件");
+    }
+    if (SrcLine.size() > 65535){
+        throw std::invalid_argument("源代码文件过大");
     }
 }
 
