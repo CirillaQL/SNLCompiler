@@ -19,11 +19,53 @@ static std::string reservedWords[] = {"program", "type", "var", "procedure", "be
                                       "else", "fi", "while", "do", "endwh", "read", "write", "return", "integer", "char"
 };
 
-std::string MPTypeString[] = {
-        "MPT_None",
-        "MPT_Other",
-        "MPT_Board"
-};
+//判断为保留字
+Word WhichID(const std::string& _text){
+    if (_text == "if"){
+        return IF;
+    }else if (_text == "then"){
+        return THEN;
+    }else if (_text == "fi"){
+        return FI;
+    }else if (_text == "program"){
+        return PROGRAM;
+    }else if (_text == "type"){
+        return TYPE;
+    }else if (_text == "var"){
+        return VAR;
+    }else if (_text == "procedure"){
+        return PROCEDURE;
+    }else if (_text == "else"){
+        return ELSE;
+    }else if (_text == "while"){
+        return WHILE;
+    }else if (_text == "do"){
+        return DO;
+    }else if (_text == "endwh"){
+        return ENDWH;
+    }else if (_text == "begin"){
+        return BEGIN;
+    }else if (_text == "end"){
+        return END;
+    }else if (_text == "read"){
+        return READ;
+    }else if (_text == "write"){
+        return WRITE;
+    }else if (_text == "of"){
+        return OF;
+    }else if (_text == "return"){
+        return RETURN;
+    }else if (_text == "array"){
+        return ARRAY;
+    }else if (_text == "record"){
+        return RECORD;
+    }else if (_text == "integer"){
+        return INTEGER;
+    }else if (_text == "char"){
+        return CHAR;
+    } else
+        return NOTINTHIS;
+}
 
 /* **************************
  * **************************
@@ -96,8 +138,6 @@ public:
 
     //向TokenList中添加Token
     void AddToken(const Token& token);
-
-
 };
 
 

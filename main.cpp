@@ -7,6 +7,10 @@ using namespace std;
 
 int main()
 {
+    DFA a = DFA("1.txt");
+    a.getTokenList();
+    a.showTokenList();
+    /*
     FileReader fi = FileReader();
     fi.ReadFile("1.txt");
     auto l = fi.getSrcLine();
@@ -24,7 +28,7 @@ int main()
         a1.resize(20,' ');
         a2.resize(20,' ');
         cout << a1 << a2 << item.getLine() <<endl;
-    }
+    }*/
     //TokenList o = TokenList();
     //getToken(o,"program p type t = integer; var t v1; ",0);
     return 0;

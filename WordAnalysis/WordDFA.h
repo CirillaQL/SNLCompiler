@@ -10,83 +10,36 @@
 #include "Word.hpp"
 
 enum StateEnum{
-    NORMAL,             //åˆå§‹çŠ¶æ€
-    INID,               //æ ‡è¯†ç¬¦çŠ¶æ€
-    INNUM,              //æ•°å­—çŠ¶æ€
-    INASSIGN,           //èµ‹å€¼çŠ¶æ€
-    INDOT,              //ç‚¹çŠ¶æ€
-    INRANGE,            //æ•°ç»„ä¸‹æ ‡ç•Œé™çŠ¶æ€
-    INCHAR,             //å­—ç¬¦æ ‡å¿—çŠ¶æ€
-    ERROR               //å‡ºé”™
+    NORMAL,             //³õÊ¼×´Ì¬
+    INID,               //±êÊ¶·û×´Ì¬
+    INNUM,              //Êý×Ö×´Ì¬
+    INASSIGN,           //¸³Öµ×´Ì¬
+    INDOT,              //µã×´Ì¬
+    INRANGE,            //Êý×éÏÂ±ê½çÏÞ×´Ì¬
+    INCHAR,             //×Ö·û±êÖ¾×´Ì¬
+    ERROR               //³ö´í
 };
 
-//åˆ¤æ–­ä¸ºå­—æ¯
+//ÅÐ¶ÏÎª×ÖÄ¸
 bool isAlpha(const char& ch){
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
-//åˆ¤æ–­ä¸ºæ•°å­—
+//ÅÐ¶ÏÎªÊý×Ö
 bool isDigit(const char& ch){
     return (ch >= '0' && ch <= '9');
 }
 
-//åˆ¤æ–­ä¸ºç©ºæ ¼
+//ÅÐ¶ÏÎª¿Õ¸ñ
 bool isBlank(const char& ch){
     return (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
 }
 
-//åˆ¤æ–­ä¸ºä¿ç•™å­—
-Word WhichID(const std::string& _text){
-    if (_text == "if"){
-        return IF;
-    }else if (_text == "then"){
-        return THEN;
-    }else if (_text == "fi"){
-        return FI;
-    }else if (_text == "program"){
-        return PROGRAM;
-    }else if (_text == "type"){
-        return TYPE;
-    }else if (_text == "var"){
-        return VAR;
-    }else if (_text == "procedure"){
-        return PROCEDURE;
-    }else if (_text == "else"){
-        return ELSE;
-    }else if (_text == "while"){
-        return WHILE;
-    }else if (_text == "do"){
-        return DO;
-    }else if (_text == "endwh"){
-        return ENDWH;
-    }else if (_text == "begin"){
-        return BEGIN;
-    }else if (_text == "end"){
-        return END;
-    }else if (_text == "read"){
-        return READ;
-    }else if (_text == "write"){
-        return WRITE;
-    }else if (_text == "of"){
-        return OF;
-    }else if (_text == "return"){
-        return RETURN;
-    }else if (_text == "array"){
-        return ARRAY;
-    }else if (_text == "record"){
-        return RECORD;
-    }else if (_text == "integer"){
-        return INTEGER;
-    }else if (_text == "char"){
-        return CHAR;
-    } else
-        return NOTINTHIS;
-}
+
 
 void getToken(TokenList& list, const std::string& input, const unsigned short& line){
     StateEnum stateEnum = NORMAL;
     std::string word;
-
     for(char ch : input){
         word += ch;
         switch (stateEnum) {
@@ -150,7 +103,7 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                 }else if (ch == ':') {
                     stateEnum = INASSIGN;
                 }else if (ch == '.') {
-                    stateEnum = INDOT;            // åŸŸçš„ç‚¹è¿ç®—ç¬¦
+                    stateEnum = INDOT;            // ÓòµÄµãÔËËã·û
                 } else if (ch == '\'') {
                     word.erase(word.end()-1);
                     stateEnum = INCHAR;
@@ -159,7 +112,7 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                 }
                 break;
             /*
-             * INIDçŠ¶æ€ï¼Œåˆ¤æ–­æ˜¯å¦ä¸ºå…³é”®å­—
+             * INID×´Ì¬£¬ÅÐ¶ÏÊÇ·ñÎª¹Ø¼ü×Ö
              */
             case INID:
                 if (isAlpha(ch) || isDigit(ch)) {
@@ -174,13 +127,13 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                         Token token = Token(WhichID(word),word,line);
                         list.AddToken(token);
                     }
-                    //æ·»åŠ Tokenå®Œæ¯•
+                    //Ìí¼ÓTokenÍê±Ï
                     word = "";
                     stateEnum = NORMAL;
                 }
                 break;
             case INNUM:
-                //å¦‚æžœæ˜¯æ•°å­—ï¼Œä¼šè‡ªåŠ¨ä¿æŒæ•°å­—çŠ¶æ€ï¼Œä¸æ˜¯æ•°å­—çš„è¯å°±å®Œæˆ;
+                //Èç¹ûÊÇÊý×Ö£¬»á×Ô¶¯±£³ÖÊý×Ö×´Ì¬£¬²»ÊÇÊý×ÖµÄ»°¾ÍÍê³É;
                 if (!isDigit(ch)) {
                     word.erase(word.end()-1); // ch
                     Token token = Token(INTC,word,line);
@@ -190,29 +143,29 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                 }
                 break;
             case INASSIGN:
-                //èµ‹å€¼è¯­å¥
+                //¸³ÖµÓï¾ä
                 if (ch == '=') {
                     Token token = Token(ASSIGN,":=",line);
                     list.AddToken(token);
                     word="";
                     stateEnum = NORMAL;
                 } else {
-                    //â€˜ï¼šâ€™ä¹‹åŽå¦‚æžœä¸æ˜¯â€˜=â€™,é‚£ä¹ˆä¸€å®šæ˜¯é”™çš„
+                    //¡®£º¡¯Ö®ºóÈç¹û²»ÊÇ¡®=¡¯,ÄÇÃ´Ò»¶¨ÊÇ´íµÄ
                     word = "";
                     stateEnum = ERROR;
                 }
                 break;
             case INDOT:
                 /*
-                 * å¥å·ï¼Œæœ‰ä¸¤ç§æƒ…å†µï¼Œä¸€ä¸ªæ˜¯æ•°ç»„å£°æ˜Žçš„æ—¶å€™ç”¨ä¸¤ä¸ª.æ¥å£°æ˜Žï¼Œä¸€ä¸ªæ˜¯ç¨‹åºç»“æŸ
+                 * ¾äºÅ£¬ÓÐÁ½ÖÖÇé¿ö£¬Ò»¸öÊÇÊý×éÉùÃ÷µÄÊ±ºòÓÃÁ½¸ö.À´ÉùÃ÷£¬Ò»¸öÊÇ³ÌÐò½áÊø
                  */
-                if (isAlpha(ch)) {          // recordåŸŸä¸­çš„ç‚¹è¿ç®—ç¬¦
+                if (isAlpha(ch)) {          // recordÓòÖÐµÄµãÔËËã·û
                     word.erase(word.end()-1);
                     Token token = Token(RECORD,word,line);
                     list.AddToken(token);
                     word = "";
                     stateEnum = NORMAL;
-                } else if (ch == '.') {     // æ•°ç»„çš„ä¸‹æ ‡è¿ç®—ç¬¦
+                } else if (ch == '.') {     // Êý×éµÄÏÂ±êÔËËã·û
                     stateEnum = INRANGE;
                     word = "";
                     break;
@@ -225,14 +178,14 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                 break;
             case INRANGE:
                 if (isDigit(ch)) {
-                    // å›žæº¯
+                    // »ØËÝ
                     word.erase(word.begin());
                     word.erase(word.begin());
                     Token token = Token(UNDERRANGE,"..",line);
                     list.AddToken(token);
                     stateEnum = NORMAL;
                 } else{
-                    // å¦‚æžœåŽé¢ä¸æ˜¯æ•°å­—ï¼Œé‚£ä¹ˆerror
+                    // Èç¹ûºóÃæ²»ÊÇÊý×Ö£¬ÄÇÃ´error
                     stateEnum = ERROR;
                 }
                 break;
@@ -254,8 +207,56 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                 break;
         }
     }
-    //Token a = Token(EoF,".",5);
-    //return a;
 }
+
+class DFA{
+private:
+    FileReader inputFile;
+    TokenList tokenList;
+public:
+    DFA();
+    DFA(const std::string& FileName);
+    void setFileName(const std::string& FileName);
+    TokenList getTokenList();
+    void showTokenList();
+};
+
+DFA::DFA(const std::string &FileName) {
+    this->inputFile.ReadFile(FileName);
+}
+
+void DFA::setFileName(const std::string &FileName) {
+    this->inputFile.ReadFile(FileName);
+}
+
+TokenList DFA::getTokenList() {
+    int Length = this->inputFile.getSrcLine().size();
+    for (int i = 0; i < Length; ++i) {
+        getToken(this->tokenList,this->inputFile.getSrcLine()[i],i);
+    }
+    //setlocale(LC_ALL, "chs");
+    //cout << "µ¥´ÊÊôÐÔ             " << "ÄÚÈÝ                " << "ÐÐÊý        "<<endl;
+    /*for(auto item : this->tokenList.getTokenList()){
+        string a1 = transformE2S(item.getType());
+        string a2 = item.getValue();
+        a1.resize(20,' ');
+        a2.resize(20,' ');
+        cout << a1 << a2 << item.getLine() <<endl;
+    }*/
+    return this->tokenList;
+}
+
+void DFA::showTokenList() {
+    std::cout << "µ¥´ÊÊôÐÔ             " << "ÄÚÈÝ                " << "ÐÐÊý        "<<std::endl;
+    for(auto item : this->tokenList.getTokenList()){
+        std::string a1 = transformE2S(item.getType());
+        std::string a2 = item.getValue();
+        a1.resize(20,' ');
+        a2.resize(20,' ');
+        std::cout << a1 << a2 << item.getLine() <<std::endl;
+    }
+}
+
+DFA::DFA() = default;
 
 #endif //SNLCOMPILER_WORDDFA_H

@@ -7,6 +7,7 @@
 
 #include <string>
 
+//关键字枚举类型
 enum Word {
     PROGRAM, TYPE, VAR, PROCEDURE, BEGIN, END, ARRAY, OF, RECORD, IF, THEN,
     ELSE, FI, WHILE, DO, ENDWH, READ, WRITE, RETURN, INTEGER, CHAR,INTC,UNDERRANGE,NOTINTHIS,
@@ -18,6 +19,7 @@ enum Word {
     ID, VOID
 };
 
+//关键字转换为字符串，用于输出查看
 std::string transformE2S(Word type){
     if (type == PROGRAM)
         return "PROGRAM";
