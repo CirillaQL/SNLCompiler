@@ -2,19 +2,30 @@
 #include "Scanner/Token.hpp"
 #include "Scanner/WordDFA.h"
 #include <iostream>
-
+#include <stdio.h>
 using namespace std;
 
 int main()
 {
-    /*
-    TokenList k = TokenList();
-    k.getWordList("1.txt");
-    auto l = k.getWordList1();
-    for (auto m : l) {
-        cout << "å•è¯å†…å®¹ï¼š " << m.value << "    " << "è¡Œæ•°: "<< m.word_line << endl;
-    }*/
+    FileReader fi = FileReader();
+    fi.ReadFile("1.txt");
+    auto l = fi.getSrcLine();
     TokenList o = TokenList();
-    getToken(o,"program * * * * \n * if while",0);
+    for (int i = 0; i < l.size(); ++i) {
+        getToken(o,l[i],i);
+    }
+    vector<Token> ans = o.getTokenList();
+    //setlocale(LC_ALL, "chs");
+    cout << "µ¥´ÊÊôÐÔ             " << "ÄÚÈÝ                " << "ÐÐÊý        "<<endl;
+    for(auto item : ans){
+
+        string a1 = transformE2S(item.getType());
+        string a2 = item.getValue();
+        a1.resize(20,' ');
+        a2.resize(20,' ');
+        cout << a1 << a2 << item.getLine() <<endl;
+    }
+    //TokenList o = TokenList();
+    //getToken(o,"program p type t = integer; var t v1; ",0);
     return 0;
 }

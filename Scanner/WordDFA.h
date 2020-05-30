@@ -75,12 +75,12 @@ Word WhichID(const std::string& _text){
         return ARRAY;
     }else if (_text == "record"){
         return RECORD;
-    }else if (_text == "Integer"){
+    }else if (_text == "integer"){
         return INTEGER;
     }else if (_text == "char"){
         return CHAR;
     } else
-        return EoF;
+        return NOTINTHIS;
 }
 
 void getToken(TokenList& list, const std::string& input, const unsigned short& line){
@@ -100,10 +100,12 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                     stateEnum = NORMAL;
                 }else if (ch == '+') {
                     Token token = Token(ADD,"+",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '-') {
                     Token token = Token(SUB,"-",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '*') {
                     Token token = Token(MUL,"*",line);
                     list.AddToken(token);
@@ -111,31 +113,40 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                     //return token;   word= "";
                 } else if (ch == '/') {
                     Token token = Token(DIV,"/",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '(') {
                     Token token = Token(LEFT_BRACKET,"(",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == ')') {
                     Token token = Token(RIGHT_BRACKET,")",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == ',') {
                     Token token = Token(COMMA,",",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == ';') {
                     Token token = Token(SEMICOLON,";",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '[') {
                     Token token = Token(LEFT_BRACES,"[",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == ']') {
                     Token token = Token(RIGHT_BRACES,"[",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '=') {
                     Token token = Token(EQUAL,"=",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 } else if (ch == '<') {
                     Token token = Token(LESS,"<",line);
-                    //return token;   word= "";
+                    list.AddToken(token);
+                    word="";
                 }else if (ch == ':') {
                     stateEnum = INASSIGN;
                 }else if (ch == '.') {
@@ -147,37 +158,97 @@ void getToken(TokenList& list, const std::string& input, const unsigned short& l
                     stateEnum = ERROR;
                 }
                 break;
+            /*
+             * INID状态，判断是否为关键字
+             */
             case INID:
                 if (isAlpha(ch) || isDigit(ch)) {
                     stateEnum = INID;
-                    std::cout << "进入INID" << std::endl;
                 } else {
-                    // 当前字符已经不是标识符范围的了，标识符已经结束了
-                    // 回溯一个字符
                     word.erase(word.end()-1);
-                    Token token = Token(WhichID(word),word,line);
-                    std::cout << "完成" << std::endl;
-                    list.AddToken(token);
+                    Word flag = WhichID(word);
+                    if (flag == NOTINTHIS){
+                        Token token = Token(ID,word,line);
+                        list.AddToken(token);
+                    } else{
+                        Token token = Token(WhichID(word),word,line);
+                        list.AddToken(token);
+                    }
+                    //添加Token完毕
                     word = "";
                     stateEnum = NORMAL;
-                    ////return token;   word= "";
                 }
                 break;
             case INNUM:
+                //如果是数字，会自动保持数字状态，不是数字的话就完成;
                 if (!isDigit(ch)) {
                     word.erase(word.end()-1); // ch
-                    //token = new Token(line, column, TokenType.INTC, sb.substring(0, sb.length() - 1));
-                    //LOG.debug("已识别Token：" + token);
-                    ////return token;   word= "";
+                    Token token = Token(INTC,word,line);
+                    list.AddToken(token);
+                    word = "";
+                    stateEnum = NORMAL;
                 }
                 break;
             case INASSIGN:
+                //赋值语句
+                if (ch == '=') {
+                    Token token = Token(ASSIGN,":=",line);
+                    list.AddToken(token);
+                    word="";
+                    stateEnum = NORMAL;
+                } else {
+                    //‘：’之后如果不是‘=’,那么一定是错的
+                    word = "";
+                    stateEnum = ERROR;
+                }
                 break;
             case INDOT:
+                /*
+                 * 句号，有两种情况，一个是数组声明的时候用两个.来声明，一个是程序结束
+                 */
+                if (isAlpha(ch)) {          // record域中的点运算符
+                    word.erase(word.end()-1);
+                    Token token = Token(RECORD,word,line);
+                    list.AddToken(token);
+                    word = "";
+                    stateEnum = NORMAL;
+                } else if (ch == '.') {     // 数组的下标运算符
+                    stateEnum = INRANGE;
+                    word = "";
+                    break;
+                }else if (ch == ' ' || ch == '\n'){
+                    //Token token = Token(EoF,".",line);
+                    //list.AddToken(token);
+                    //word = "";
+                    stateEnum = NORMAL;
+                }
                 break;
             case INRANGE:
+                if (isDigit(ch)) {
+                    // 回溯
+                    word.erase(word.begin());
+                    word.erase(word.begin());
+                    Token token = Token(UNDERRANGE,"..",line);
+                    list.AddToken(token);
+                    stateEnum = NORMAL;
+                } else{
+                    // 如果后面不是数字，那么error
+                    stateEnum = ERROR;
+                }
                 break;
             case INCHAR:
+                if (isDigit(ch) || isAlpha(ch)) {
+                    stateEnum = INCHAR;
+                }else if (ch == '\''){
+                    word.erase(word.end()-1);
+                    Token token = Token(CHAR,word,line);
+                    list.AddToken(token);
+                    word = "";
+                    stateEnum = NORMAL;
+                } else{
+                    word = "";
+                    stateEnum = ERROR;
+                }
                 break;
             case ERROR:
                 break;
