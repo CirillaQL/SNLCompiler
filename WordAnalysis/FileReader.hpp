@@ -22,6 +22,12 @@ public:
     void ReadFile(const std::string &filename);
 
     const std::vector<std::string> &getSrcLine() const;
+
+    void ShowFile(){
+        for(const auto& item : this->SrcLine){
+            std::cout << item ;//<< std::endl;
+        }
+    }
 };
 
 FileReader::FileReader() = default;

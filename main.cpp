@@ -1,20 +1,19 @@
-#include "Scanner/FileReader.hpp"
-#include "Scanner/Token.hpp"
-#include "Scanner/WordDFA.h"
+#include "WordAnalysis/FileReader.hpp"
+#include "WordAnalysis/Token.hpp"
+#include "WordAnalysis/DFA.hpp"
 #include <iostream>
 #include <stdio.h>
 using namespace std;
 
 int main()
 {
-    DFA a = DFA("1.txt");
-    a.getTokenList();
-    a.showTokenList();
-    /*
-    FileReader fi = FileReader();
-    fi.ReadFile("1.txt");
-    auto l = fi.getSrcLine();
-    TokenList o = TokenList();
+    DFA a = DFA();
+    TokenList p = a.getTokenlist("1.txt");
+    p.print();
+    //FileReader fi = FileReader();
+   // fi.ReadFile("1.txt");
+    //fi.ShowFile();
+    /*TokenList o = TokenList();
     for (int i = 0; i < l.size(); ++i) {
         getToken(o,l[i],i);
     }

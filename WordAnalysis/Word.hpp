@@ -11,7 +11,7 @@
 enum Word {
     PROGRAM, TYPE, VAR, PROCEDURE, BEGIN, END, ARRAY, OF, RECORD, IF, THEN,
     ELSE, FI, WHILE, DO, ENDWH, READ, WRITE, RETURN, INTEGER, CHAR,INTC,UNDERRANGE,NOTINTHIS,
-    UNSIGNEDNUMBER,
+    UNSIGNEDNUMBER,Error,
     ADD, SUB, MUL, DIV, LESS, EQUAL, LEFT_PARENT, RIGHT_PARENT,
     LEFT_BRACKET, RIGHT_BRACKET, DOT, SEMICOLON, EoF, SPACE,
     COLON_EQUAL, LEFT_BRACES, RIGHT_BRACES, APOSTROPHE, TWO_DOT,
@@ -95,6 +95,8 @@ std::string transformE2S(Word type){
         return "ASSIGN";
     else if (type == ID)
         return "ID";
+    else if (type == EoF)
+        return "EOF";
     else
         return "NO";
 }

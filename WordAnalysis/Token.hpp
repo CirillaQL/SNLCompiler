@@ -14,10 +14,7 @@
 /*
  * 设置SNL语言中的关键字
  */
-static std::string reservedWords[] = {"program", "type", "var", "procedure", "begin", "end", "array", "of", "record",
-                                      "if", "then",
-                                      "else", "fi", "while", "do", "endwh", "read", "write", "return", "integer", "char"
-};
+
 
 //判断为保留字
 Word WhichID(const std::string& _text){
@@ -89,6 +86,7 @@ public:
     const std::string &getValue() const;
 
     unsigned short getLine() const;
+
 };
 
 Token::Token(Word type, std::string _context, unsigned short int _line) {
@@ -138,6 +136,10 @@ public:
 
     //向TokenList中添加Token
     void AddToken(const Token& token);
+
+    int getSize();
+
+    void print();
 };
 
 
@@ -151,6 +153,20 @@ const std::vector<Token> &TokenList::getTokenList() const {
 
 void TokenList::setTokenList(const std::vector<Token> &tokenList) {
     TokenList::tokenList = tokenList;
+}
+
+int TokenList::getSize() {
+    return this->tokenList.size();
+}
+
+void TokenList::print() {
+    for(auto const& item : this->tokenList){
+        std::string a1 = transformE2S(item.getType());
+        std::string a2 = item.getValue();
+        a1.resize(20,' ');
+        a2.resize(20,' ');
+        std::cout << a1 << a2 << item.getLine() << std::endl;
+    }
 }
 
 
