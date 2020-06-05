@@ -9,52 +9,53 @@
 
 using namespace std;
 
-//åˆ¤æ–­ä¸ºå­—æ¯
+//ÅĞ¶ÏÎª×ÖÄ¸
 bool isAlpha(const char& ch){
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
-//åˆ¤æ–­ä¸ºæ•°å­—
+//ÅĞ¶ÏÎªÊı×Ö
 bool isDigit(const char& ch){
     return (ch >= '0' && ch <= '9');
 }
 
-//åˆ¤æ–­ä¸ºç©ºæ ¼
+//ÅĞ¶ÏÎª¿Õ¸ñ
 bool isBlank(const char& ch){
     return (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
 }
 
-//è¯æ³•åˆ†æç¨‹åºï¼ŒDFAè‡ªåŠ¨æœº
+//´Ê·¨·ÖÎö³ÌĞò£¬DFA×Ô¶¯»ú
 class DFA{
 private:
     enum StateEnum{
-        NORMAL,             //åˆå§‹çŠ¶æ€
-        INID,               //æ ‡è¯†ç¬¦çŠ¶æ€
-        INNUM,              //æ•°å­—çŠ¶æ€
-        INASSIGN,           //èµ‹å€¼çŠ¶æ€(:
-        INCOMMIT,           //æ³¨é‡ŠçŠ¶æ€
-        INDOT,              //ç‚¹çŠ¶æ€
-        INRANGE,            //æ•°ç»„ä¸‹æ ‡ç•Œé™çŠ¶æ€
-        INCHAR,             //å­—ç¬¦æ ‡å¿—çŠ¶æ€
-        ERROR               //å‡ºé”™
+        NORMAL,             //³õÊ¼×´Ì¬
+        INID,               //±êÊ¶·û×´Ì¬
+        INNUM,              //Êı×Ö×´Ì¬
+        INASSIGN,           //¸³Öµ×´Ì¬(:
+        INCOMMIT,           //×¢ÊÍ×´Ì¬
+        INDOT,              //µã×´Ì¬
+        INRANGE,            //Êı×éÏÂ±ê½çÏŞ×´Ì¬
+        INCHAR,             //×Ö·û±êÖ¾×´Ì¬
+        ERROR               //³ö´í
     };
 public:
     DFA();
     TokenList getTokenlist(const string& filename);
+
 };
 
 TokenList DFA::getTokenlist(const string &filename) {
     FileReader fileReader = FileReader();
     fileReader.ReadFile(filename);
-    //å®Œæˆè¯»å–æºæ–‡ä»¶
+    //Íê³É¶ÁÈ¡Ô´ÎÄ¼ş
     vector<string> srcLine = fileReader.getSrcLine();
-    //è¯»å–åˆ°æºæ–‡ä»¶åºåˆ—ä¸­
-    //åˆå§‹åŒ–TokenList
+    //¶ÁÈ¡µ½Ô´ÎÄ¼şĞòÁĞÖĞ
+    //³õÊ¼»¯TokenList
     TokenList list = TokenList();
-    //æ¯è¡Œçš„è¯»å–ä¸å¤„ç†
+    //Ã¿ĞĞµÄ¶ÁÈ¡Óë´¦Àí
     int lineNumber = 1;
     for(const auto& line : srcLine){
-        //æ¯è¡Œçš„å…·ä½“æ“ä½œ
+        //Ã¿ĞĞµÄ¾ßÌå²Ù×÷
         int length = line.size();
         string word;
         StateEnum stateEnum = NORMAL;
@@ -62,29 +63,29 @@ TokenList DFA::getTokenlist(const string &filename) {
             word += line[i];
             switch (stateEnum) {
                 case NORMAL:
-                    //ä¸€å¼€å§‹è¿›å…¥ï¼Œåˆå§‹åŒ–
-                    //å¦‚æœSä¸ºå­—æ¯ï¼Œè½¬INID
+                    //Ò»¿ªÊ¼½øÈë£¬³õÊ¼»¯
+                    //Èç¹ûSÎª×ÖÄ¸£¬×ªINID
                     if (isAlpha(line[i])){
                         stateEnum = INID;
                     }
-                    //å¦‚æœSä¸ºæ•°å­—ï¼Œè½¬INNUM;
+                    //Èç¹ûSÎªÊı×Ö£¬×ªINNUM;
                     else if(isDigit(line[i])){
                         stateEnum = INNUM;
                     }
-                    //ä¸ºç©ºæ ¼
+                    //Îª¿Õ¸ñ
                     else if (isBlank(line[i])){
                         word.erase(word.end()-1);
                         stateEnum = NORMAL;
                     }
-                    //å¦‚æœSä¸ºâ€˜ï¼šâ€™ï¼Œè½¬èµ‹å€¼
+                    //Èç¹ûSÎª¡®£º¡¯£¬×ª¸³Öµ
                     else if (line[i] == ':'){
                         stateEnum = INASSIGN;
                     }
-                    //å¦‚æœSä¸º'{'è¿›å…¥
+                    //Èç¹ûSÎª'{'½øÈë
                     else if (line[i] == '{'){
                         stateEnum = INCOMMIT;
                     }
-                    //å¦‚æœSä¸º.åˆ¤æ–­æ˜¯æ•°ç»„è¿˜æ˜¯ç»“æŸ
+                    //Èç¹ûSÎª.ÅĞ¶ÏÊÇÊı×é»¹ÊÇ½áÊø
                     else if(line[i] == '.'){
                         if (line[i+1] == '.'){
                             stateEnum = INRANGE;
@@ -92,11 +93,11 @@ TokenList DFA::getTokenlist(const string &filename) {
                             stateEnum = INDOT;
                         }
                     }
-                    //å¦‚æœSä¸º',åˆ™è¿›å…¥å­—ç¬¦
+                    //Èç¹ûSÎª',Ôò½øÈë×Ö·û
                     else if (line[i] == '\''){
                         stateEnum = INCHAR;
                     }
-                    //ä½™ä¸‹çš„åˆ™ä¸ºåˆ¤æ–­ç‰¹æ®Šå­—ç¬¦
+                    //ÓàÏÂµÄÔòÎªÅĞ¶ÏÌØÊâ×Ö·û
                     else if (line[i] == '+') {
                         Token token = Token(ADD,"+",lineNumber);
                         list.AddToken(token);
@@ -148,10 +149,10 @@ TokenList DFA::getTokenlist(const string &filename) {
                         word = "";
                     }
                     break;
-                //æ ‡è¯†ç¬¦å¤„ç†
+                //±êÊ¶·û´¦Àí
                 case INID:
                     if (isAlpha(line[i]) || isDigit(line[i])) {
-                        //æ²¡å®Œäº‹ï¼Œç»§ç»­
+                        //Ã»ÍêÊÂ£¬¼ÌĞø
                         stateEnum = INID;
                     } else {
                         word.erase(word.end()-1);
@@ -163,7 +164,7 @@ TokenList DFA::getTokenlist(const string &filename) {
                             Token token = Token(WhichID(word),word,lineNumber);
                             list.AddToken(token);
                         }
-                        //æ·»åŠ Tokenå®Œæ¯•
+                        //Ìí¼ÓTokenÍê±Ï
                         if (line[i] == ' '){
                             i++;
                             word = "";
@@ -172,9 +173,9 @@ TokenList DFA::getTokenlist(const string &filename) {
                         stateEnum = NORMAL;
                     }
                     break;
-                //æ•°å­—çŠ¶æ€å¤„ç†
+                //Êı×Ö×´Ì¬´¦Àí
                 case INNUM:
-                    //å¦‚æœæ˜¯æ•°å­—ï¼Œä¼šè‡ªåŠ¨ä¿æŒæ•°å­—çŠ¶æ€ï¼Œä¸æ˜¯æ•°å­—çš„è¯å°±å®Œæˆ;
+                    //Èç¹ûÊÇÊı×Ö£¬»á×Ô¶¯±£³ÖÊı×Ö×´Ì¬£¬²»ÊÇÊı×ÖµÄ»°¾ÍÍê³É;
                     if (!isDigit(line[i])) {
                         word.erase(word.end()-1); // ch
                         Token token = Token(INTC,word,lineNumber);
@@ -183,7 +184,7 @@ TokenList DFA::getTokenlist(const string &filename) {
                         i--;
                         stateEnum = NORMAL;
                     }else{
-                        //æ²¡å®Œäº‹ï¼Œç»§ç»­è¯»æ•°å­—
+                        //Ã»ÍêÊÂ£¬¼ÌĞø¶ÁÊı×Ö
                         stateEnum = INNUM;
                     }
                     break;
@@ -194,15 +195,15 @@ TokenList DFA::getTokenlist(const string &filename) {
                         word="";
                         stateEnum = NORMAL;
                     } else {
-                        //â€˜ï¼šâ€™ä¹‹åå¦‚æœä¸æ˜¯â€˜=â€™,é‚£ä¹ˆä¸€å®šæ˜¯é”™çš„
+                        //¡®£º¡¯Ö®ºóÈç¹û²»ÊÇ¡®=¡¯,ÄÇÃ´Ò»¶¨ÊÇ´íµÄ
                         stateEnum = ERROR;
                     }
                     break;
                 case INDOT:
                     /*
-                     * å¥å·ï¼Œæœ‰ä¸¤ç§æƒ…å†µï¼Œä¸€ä¸ªæ˜¯æ•°ç»„å£°æ˜çš„æ—¶å€™ç”¨ä¸¤ä¸ª.æ¥å£°æ˜ï¼Œä¸€ä¸ªæ˜¯ç¨‹åºç»“æŸ
+                     * ¾äºÅ£¬ÓĞÁ½ÖÖÇé¿ö£¬Ò»¸öÊÇÊı×éÉùÃ÷µÄÊ±ºòÓÃÁ½¸ö.À´ÉùÃ÷£¬Ò»¸öÊÇ³ÌĞò½áÊø
                      */
-                    if (isAlpha(line[i])) {          // recordåŸŸä¸­çš„ç‚¹è¿ç®—ç¬¦
+                    if (isAlpha(line[i])) {          // recordÓòÖĞµÄµãÔËËã·û
                         word.erase(word.end()-1);
                         Token token = Token(RECORD,word,lineNumber);
                         list.AddToken(token);
@@ -216,14 +217,14 @@ TokenList DFA::getTokenlist(const string &filename) {
                     break;
                 case INRANGE:
                     if (isDigit(line[i+1])) {
-                        // å›æº¯
+                        // »ØËİ
                         word.erase(word.begin());
                         word.erase(word.begin());
                         Token token = Token(UNDERRANGE,"..",lineNumber);
                         list.AddToken(token);
                         stateEnum = NORMAL;
                     } else{
-                        // å¦‚æœåé¢ä¸æ˜¯æ•°å­—ï¼Œé‚£ä¹ˆerror
+                        // Èç¹ûºóÃæ²»ÊÇÊı×Ö£¬ÄÇÃ´error
                         stateEnum = ERROR;
                     }
                     break;
@@ -243,10 +244,12 @@ TokenList DFA::getTokenlist(const string &filename) {
                     break;
                 case ERROR:
                     Token ErrorToken = Token(Error, word, lineNumber);
+                    cout << "´íÎó£¬ÎŞ·¨Ê¶±ğµÚ" << lineNumber << "ĞĞ´ÊÓï"<< endl;
                     word = "";
+                    exit(1);
             }
         }
-        lineNumber++;           //è¡Œæ•°è‡ªå¢1
+        lineNumber++;           //ĞĞÊı×ÔÔö1
     }
     return list;
 }
