@@ -1,13 +1,13 @@
 
 #include "WordAnalysis/Token.hpp"
 #include "WordAnalysis/DFA.hpp"
-
+#include "SyntacticAnalysis/Syntax.hpp"
 using namespace std;
 
 int main()
 {
-    DFA a = DFA();
-    TokenList p = a.getTokenlist("1.txt");
-    p.print();
+    LL1Syntax k = LL1Syntax();
+    k.initProductions("productionLines.txt");
+    k.print();
     return 0;
 }

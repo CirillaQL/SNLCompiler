@@ -14,6 +14,8 @@ using namespace std;
 class AnalysisStack{
 private:
     stack<Production> AnalysisStack;
+public:
+
 };
 
 #endif //SNLCOMPILER_ANALYSISSTACK_HPP
