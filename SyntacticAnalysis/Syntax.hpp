@@ -24,7 +24,7 @@ public:
     //分析栈入栈
     void LL1();
     //替换函数，将栈顶的元素替换成推导式
-    void Replace();
+    void Replace(const string& input);
 };
 
 /*
@@ -92,15 +92,32 @@ void LL1Syntax::LL1() {
     this->AnalysisStack.push(tables[0].getContent());
 }
 
-void LL1Syntax::Replace() {
+void LL1Syntax::Replace(const string& input) {
     //todo为栈顶元素
     string todo = this->AnalysisStack.top();
-    const vector<string>& todo_predictSet = todo.getPredictSets();
-    vector<string>::const_reverse_iterator i = todo_predictSet.rbegin();
-    for (std::set<int>::reverse_iterator it=todo_predictSet.rbegin();it != todo_predictSet.rend();++it) {
 
+    for (auto item : this->tables){
+        /*
+         * 在推导式表中找到Production->Content == 当前栈顶string的item
+         */
+        if (item.getContent() == todo){
+            /*
+             * 遍历对应Production的PredictSet,判断当前TokenList顶端的元素是不是在当前Production对应终结符中
+             * 需要注意的是，在txt文档中，可能有多个Production有相同的左值，因此需要input在哪个当中
+             */
+            for(auto predictset : item.getPredictSets()){
+                if (input == predictset){
+                    /*
+                     * 找到了，分析栈弹出，在Derivation中从后往前入栈，这样栈顶元素就是第一个Derivation
+                     */
+                    this->AnalysisStack.pop();
+                    for (int i = item.getDerivations().size()-1; i >= 0 ; i--) {
+                        this->AnalysisStack.push(item.getDerivations()[i]);
+                    }
+                }
+            }
+        }
     }
-
 }
 
 
