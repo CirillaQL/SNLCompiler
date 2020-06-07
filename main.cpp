@@ -8,6 +8,11 @@ int main()
 {
     LL1Syntax k = LL1Syntax();
     k.initProductions("productionLines.txt");
-    k.print();
+    k.LL1();
+
+    DFA sss = DFA();
+    TokenList p = sss.getTokenlist("1.txt");
+    p.print();
+
     return 0;
 }

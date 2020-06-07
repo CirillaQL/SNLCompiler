@@ -34,6 +34,9 @@ public:
     const vector<string> &getDerivations() const;
 
     const vector<string> &getPredictSets() const;
+
+    //在PredictSet中查找是否含有目标终结符
+    bool findSet(const string& value) const ;
 };
 
 Production::Production(const string &_content, const vector<string> &_derivations,
@@ -55,7 +58,7 @@ void Production::setContent(const string& input) {
     this->Content = input;
 }
 
-const string &Production::getContent() const {
+const string & Production::getContent() const {
     return Content;
 }
 
@@ -65,6 +68,15 @@ const vector<string> &Production::getDerivations() const {
 
 const vector<string> &Production::getPredictSets() const {
     return PredictSets;
+}
+
+bool Production::findSet(const string& value) const {
+    for (const auto& item : this->PredictSets) {
+        if (item == value){
+            return true;
+        }
+    }
+    return false;
 }
 
 Production::Production() = default;
