@@ -6,13 +6,21 @@ using namespace std;
 
 int main()
 {
-    LL1Syntax k = LL1Syntax();
-    k.initProductions("productionLines.txt");
-    k.LL1();
-
     DFA sss = DFA();
     TokenList p = sss.getTokenlist("1.txt");
-    p.print();
+
+    LL1Syntax k = LL1Syntax();
+    k.initProductions("productionLines.txt");
+    k.setTokenList(p);
+    k.LL1();
+
+
+
+    //k.setTokenList(p);
+    //k.Replace("PROGRAM");
+    //k.Replace("ID");
+    //k.Replace("TYPE");
+    //k.Replace("PROGRAM");
 
     return 0;
 }
