@@ -100,31 +100,12 @@ void LL1Syntax::print() {
 }
 
 void LL1Syntax::LL1() {
-    /*
-     * Token序列初始化，分析栈第一个入栈
-     */
-    //vector<Token> _tokenlist = this->tokenList.getTokenList();
     this->AnalysisStack.push(tables[0].getContent());
-    /*
-     * 进入循环，for循环对象应该为TokenList
-     */
-    /*cout << _tokenlist.size();
-    for (int i = 0; i < _tokenlist.size(); i++) {
-        //cout << i ;
-        Token item = _tokenlist[i];
-        string input = transformE2S(item.getType());
-        if (input != this->AnalysisStack.top()) {
-            Replace(input);
-        }
-        cout << this->AnalysisStack.top() << endl;
-    }*/
 }
 
 void LL1Syntax::Replace(const string &input) {
-
     if (input == "EoF")
         return;
-
 
     //todo为栈顶元素
     string todo = this->AnalysisStack.top();
@@ -158,15 +139,24 @@ void LL1Syntax::Replace(const string &input) {
                         cout << p <<" ";
                     }
                     cout <<endl;
+                    /*
+                     * 输出查看     ↑
+                     */
                     this->AnalysisStack.pop();
-                    for (int i = item.getDerivations().size() - 1; i >= 0; i--) {
+                    //倒叙遍历入栈
+                    for (auto i = item.getDerivations().size() - 1; i >= 0; i--) {
+                        /*
+                         * 如果是ε略过
+                         */
                         if (item.getDerivations()[i] == "EPSILON") {
                             continue;
                         } else {
                             this->AnalysisStack.push(item.getDerivations()[i]);
                         }
-
                     }
+                    /*
+                     * 如果顶端是当前元素，则弹出(匹配到了)，否则，递归。
+                     */
                     if (this->AnalysisStack.top() == input) {
                         this->AnalysisStack.pop();
                     } else {
@@ -187,19 +177,6 @@ void LL1Syntax::Replace(const string &input) {
         cout << "Analysis Stack is Empty" << endl;
         return;
     }
-    /*
-    while(!this->AnalysisStack.empty()){
-        check.push_back(this->AnalysisStack.top());
-        this->AnalysisStack.pop();
-    }
-    for (int j = check.size()-1; j >= 0; j--) {
-        cout << check[j] << " ";
-    }
-    cout << endl;
-    for (int k = check.size()-1; k >= 0; k--) {
-        this->AnalysisStack.push(check[k]);
-    }
-     */
 }
 
 void LL1Syntax::setTokenList(const TokenList &tokenlist) {
@@ -211,5 +188,12 @@ void LL1Syntax::Analysis() {
         Replace(transformE2S(i.getType()));
     }
 }
+
+/*
+ * 绘制语法树思想：在匹配到当前元素并弹出时，检测元素性质，并确定语法树的缩进输出。
+ *
+ */
+
+
 
 #endif //SNLCOMPILER_SYNTAX_HPP
