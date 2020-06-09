@@ -14,14 +14,7 @@ int main()
     k.setTokenList(p);
     k.LL1();
 
-    vector<Token> todo = p.getTokenList();
-    for (int i = 0; i < todo.size(); ++i) {
-        k.Replace(transformE2S(todo[i].getType()));
-        /*cout << transformE2S(todo[i].getType())<< endl;*/
-    }
-
-    //k.setTokenList(p);
-
+    k.Analysis();
 
     return 0;
 }

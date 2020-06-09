@@ -13,32 +13,34 @@
 
 class LL1Syntax {
 private:
-    //å­˜å‚¨Productionæ¨å¯¼å¼
+    //´æ´¢ProductionÍÆµ¼Ê½
     vector<Production> tables;
-    //åˆ†ææ ˆ
+    //·ÖÎöÕ»
     stack<string> AnalysisStack;
-    //TokenListåºåˆ—
-    TokenList tokenList;
+    //TokenListĞòÁĞ
+    vector<Token> tokenList;
 public:
-    //æ ¹æ®ä¸Šä¸‹æ–‡æ— å…³æ–‡æ³•ç”ŸæˆPrecdict
+    //¸ù¾İÉÏÏÂÎÄÎŞ¹ØÎÄ·¨Éú³ÉPrecdict
     void initProductions(const string &filename);
 
-    //è¾“å‡ºè¡¨
+    //Êä³ö±í
     void print();
 
-    //åˆ†ææ ˆå…¥æ ˆ
+    //·ÖÎöÕ»ÈëÕ»
     void LL1();
 
-    //æ›¿æ¢å‡½æ•°ï¼Œå°†æ ˆé¡¶çš„å…ƒç´ æ›¿æ¢æˆæ¨å¯¼å¼
+    //Ìæ»»º¯Êı£¬½«Õ»¶¥µÄÔªËØÌæ»»³ÉÍÆµ¼Ê½
     void Replace(const string &input);
 
     //setTokenList
     void setTokenList(const TokenList &tokenlist);
 
+    //·ÖÎö
+    void Analysis();
 };
 
 /*
- * åˆå§‹åŒ–LL1åˆ†æè¡¨ï¼Œé€šè¿‡æ¨å¯¼å¼è¡¨ç¤º.
+ * ³õÊ¼»¯LL1·ÖÎö±í£¬Í¨¹ıÍÆµ¼Ê½±íÊ¾.
  */
 void LL1Syntax::initProductions(const string &filename) {
     ifstream infile(filename);
@@ -99,12 +101,12 @@ void LL1Syntax::print() {
 
 void LL1Syntax::LL1() {
     /*
-     * Tokenåºåˆ—åˆå§‹åŒ–ï¼Œåˆ†ææ ˆç¬¬ä¸€ä¸ªå…¥æ ˆ
+     * TokenĞòÁĞ³õÊ¼»¯£¬·ÖÎöÕ»µÚÒ»¸öÈëÕ»
      */
     //vector<Token> _tokenlist = this->tokenList.getTokenList();
     this->AnalysisStack.push(tables[0].getContent());
     /*
-     * è¿›å…¥å¾ªç¯ï¼Œforå¾ªç¯å¯¹è±¡åº”è¯¥ä¸ºTokenList
+     * ½øÈëÑ­»·£¬forÑ­»·¶ÔÏóÓ¦¸ÃÎªTokenList
      */
     /*cout << _tokenlist.size();
     for (int i = 0; i < _tokenlist.size(); i++) {
@@ -119,31 +121,43 @@ void LL1Syntax::LL1() {
 }
 
 void LL1Syntax::Replace(const string &input) {
-    //todoä¸ºæ ˆé¡¶å…ƒç´ 
+
+    if (input == "EoF")
+        return;
+
+
+    //todoÎªÕ»¶¥ÔªËØ
     string todo = this->AnalysisStack.top();
     /*
-     * é¦–å…ˆåˆ¤æ–­ï¼Œæ ˆé¡¶å…ƒç´ æ˜¯ä¸æ˜¯ç›´æ¥ç­‰äºå½“å‰Token
+     * Ê×ÏÈÅĞ¶Ï£¬Õ»¶¥ÔªËØÊÇ²»ÊÇÖ±½ÓµÈÓÚµ±Ç°Token
      */
     if (this->AnalysisStack.top() == input) {
         this->AnalysisStack.pop();
+        cout << "ÕÒµ½ :" << input << endl;
         return;
     }
 
     for (auto item : this->tables) {
         /*
-         * åœ¨æ¨å¯¼å¼è¡¨ä¸­æ‰¾åˆ°Production->Content == å½“å‰æ ˆé¡¶stringçš„item
+         * ÔÚÍÆµ¼Ê½±íÖĞÕÒµ½Production->Content == µ±Ç°Õ»¶¥stringµÄitem
          */
         if (item.getContent() == todo) {
             /*
-             * éå†å¯¹åº”Productionçš„PredictSet,åˆ¤æ–­å½“å‰TokenListé¡¶ç«¯çš„å…ƒç´ æ˜¯ä¸æ˜¯åœ¨å½“å‰Productionå¯¹åº”ç»ˆç»“ç¬¦ä¸­
-             * éœ€è¦æ³¨æ„çš„æ˜¯ï¼Œåœ¨txtæ–‡æ¡£ä¸­ï¼Œå¯èƒ½æœ‰å¤šä¸ªProductionæœ‰ç›¸åŒçš„å·¦å€¼ï¼Œå› æ­¤éœ€è¦inputåœ¨å“ªä¸ªå½“ä¸­
+             * ±éÀú¶ÔÓ¦ProductionµÄPredictSet,ÅĞ¶Ïµ±Ç°TokenList¶¥¶ËµÄÔªËØÊÇ²»ÊÇÔÚµ±Ç°Production¶ÔÓ¦ÖÕ½á·ûÖĞ
+             * ĞèÒª×¢ÒâµÄÊÇ£¬ÔÚtxtÎÄµµÖĞ£¬¿ÉÄÜÓĞ¶à¸öProductionÓĞÏàÍ¬µÄ×óÖµ£¬Òò´ËĞèÒªinputÔÚÄÄ¸öµ±ÖĞ
              */
             for (auto predictset : item.getPredictSets()) {
                 if (input == predictset) {
                     /*
-                     * æ‰¾åˆ°äº†ï¼Œåˆ†ææ ˆå¼¹å‡ºï¼Œåœ¨Derivationä¸­ä»åå¾€å‰å…¥æ ˆï¼Œè¿™æ ·æ ˆé¡¶å…ƒç´ å°±æ˜¯ç¬¬ä¸€ä¸ªDerivation
-                     * æ³¨æ„ï¼Œå½“Derivationä¸ºEPSILONæ—¶ï¼Œä¸å…¥æ ˆ
+                     * ÕÒµ½ÁË£¬·ÖÎöÕ»µ¯³ö£¬ÔÚDerivationÖĞ´ÓºóÍùÇ°ÈëÕ»£¬ÕâÑùÕ»¶¥ÔªËØ¾ÍÊÇµÚÒ»¸öDerivation
+                     * ×¢Òâ£¬µ±DerivationÎªEPSILONÊ±£¬²»ÈëÕ»
                      */
+                    cout << "ÕÒµ½ÁËÌæ»»Ê½: "<<endl;
+                    cout << item.getContent() << " : ";
+                    for (auto p : item.getDerivations()) {
+                        cout << p <<" ";
+                    }
+                    cout <<endl;
                     this->AnalysisStack.pop();
                     for (int i = item.getDerivations().size() - 1; i >= 0; i--) {
                         if (item.getDerivations()[i] == "EPSILON") {
@@ -155,7 +169,6 @@ void LL1Syntax::Replace(const string &input) {
                     }
                     if (this->AnalysisStack.top() == input) {
                         this->AnalysisStack.pop();
-                        break;
                     } else {
                         Replace(input);
                     }
@@ -163,11 +176,40 @@ void LL1Syntax::Replace(const string &input) {
             }
         }
     }
+
+    /*
+     * Êä³öµ±Ç°Õ»ÖĞÔªËØ
+     */
+
+
+    vector<string> check;
+    if(this->AnalysisStack.empty()){
+        cout << "Analysis Stack is Empty" << endl;
+        return;
+    }
+    /*
+    while(!this->AnalysisStack.empty()){
+        check.push_back(this->AnalysisStack.top());
+        this->AnalysisStack.pop();
+    }
+    for (int j = check.size()-1; j >= 0; j--) {
+        cout << check[j] << " ";
+    }
+    cout << endl;
+    for (int k = check.size()-1; k >= 0; k--) {
+        this->AnalysisStack.push(check[k]);
+    }
+     */
 }
 
 void LL1Syntax::setTokenList(const TokenList &tokenlist) {
-    this->tokenList = tokenlist;
+    this->tokenList = tokenlist.getTokenList();
 }
 
+void LL1Syntax::Analysis() {
+    for (auto & i : this->tokenList) {
+        Replace(transformE2S(i.getType()));
+    }
+}
 
 #endif //SNLCOMPILER_SYNTAX_HPP
