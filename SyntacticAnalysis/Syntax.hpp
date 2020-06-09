@@ -101,12 +101,12 @@ void LL1Syntax::LL1() {
     /*
      * Token序列初始化，分析栈第一个入栈
      */
-    vector<Token> _tokenlist = this->tokenList.getTokenList();
+    //vector<Token> _tokenlist = this->tokenList.getTokenList();
     this->AnalysisStack.push(tables[0].getContent());
     /*
      * 进入循环，for循环对象应该为TokenList
      */
-    cout << _tokenlist.size();
+    /*cout << _tokenlist.size();
     for (int i = 0; i < _tokenlist.size(); i++) {
         //cout << i ;
         Token item = _tokenlist[i];
@@ -115,7 +115,7 @@ void LL1Syntax::LL1() {
             Replace(input);
         }
         cout << this->AnalysisStack.top() << endl;
-    }
+    }*/
 }
 
 void LL1Syntax::Replace(const string &input) {
