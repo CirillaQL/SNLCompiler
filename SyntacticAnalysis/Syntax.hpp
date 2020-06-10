@@ -144,7 +144,7 @@ void LL1Syntax::Replace(const string &input) {
                      */
                     this->AnalysisStack.pop();
                     //倒叙遍历入栈
-                    for (auto i = item.getDerivations().size() - 1; i >= 0; i--) {
+                    for (int i = item.getDerivations().size() - 1; i >= 0; i--) {
                         /*
                          * 如果是ε略过
                          */
