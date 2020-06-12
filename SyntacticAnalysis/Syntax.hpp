@@ -19,6 +19,8 @@ private:
     stack<string> AnalysisStack;
     //TokenList序列
     vector<Token> tokenList;
+    //输出序列
+    vector<string> ans;
 public:
     //根据上下文无关文法生成Precdict
     void initProductions(const string &filename);
@@ -104,7 +106,7 @@ void LL1Syntax::LL1() {
 }
 
 void LL1Syntax::Replace(const string &input) {
-    if (input == "EoF")
+    if (input == "EOF")
         return;
 
     //todo为栈顶元素
@@ -113,6 +115,8 @@ void LL1Syntax::Replace(const string &input) {
      * 首先判断，栈顶元素是不是直接等于当前Token
      */
     if (this->AnalysisStack.top() == input) {
+        string temp = "找到 "+this->AnalysisStack.top();
+        this->ans.push_back(temp);
         this->AnalysisStack.pop();
         cout << "找到 :" << input << endl;
         return;
@@ -158,6 +162,8 @@ void LL1Syntax::Replace(const string &input) {
                      * 如果顶端是当前元素，则弹出(匹配到了)，否则，递归。
                      */
                     if (this->AnalysisStack.top() == input) {
+                        string temp = "找到 "+this->AnalysisStack.top();
+                        this->ans.push_back(temp);
                         this->AnalysisStack.pop();
                     } else {
                         Replace(input);

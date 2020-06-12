@@ -87,6 +87,10 @@ public:
 
     unsigned short getLine() const;
 
+    bool isGrammer();
+
+    bool isOp();
+
 };
 
 Token::Token(Word type, std::string _context, unsigned short int _line) {
@@ -112,6 +116,72 @@ const std::string &Token::getValue() const {
 
 unsigned short Token::getLine() const {
     return line;
+}
+
+bool Token::isGrammer() {
+    if (this->Type == PROGRAM){
+        return true;
+    }else if (this->Type == TYPE){
+        return true;
+    }else if (this->Type == VAR){
+        return true;
+    }else if (this->Type == PROCEDURE){
+        return true;
+    }else if (this->Type == BEGIN){
+        return true;
+    }else if (this->Type == END){
+        return true;
+    }else if (this->Type == ARRAY){
+        return true;
+    }else if (this->Type == RECORD){
+        return true;
+    }else if (this->Type == IF){
+        return true;
+    }else if (this->Type == THEN){
+        return true;
+    }else if (this->Type == ELSE){
+        return true;
+    }else if (this->Type == FI){
+        return true;
+    }else if (this->Type == WHILE){
+        return true;
+    }else if (this->Type == DO){
+        return true;
+    }else if (this->Type == ENDWH){
+        return true;
+    }else if (this->Type == READ){
+        return true;
+    }else if (this->Type == WRITE){
+        return true;
+    }else if (this->Type == RETURN){
+        return true;
+    }else if (this->Type == ASSIGN){
+
+    }
+    else
+        return false;
+}
+
+bool Token::isOp() {
+    if (this->Type == ADD){
+        return true;
+    }else if (this->Type == SUB){
+        return true;
+    }else if (this->Type == MUL){
+        return true;
+    }else if (this->Type == DIV){
+        return true;
+    }else if (this->Type == LESS){
+        return true;
+    }else if (this->Type == ID){
+        return true;
+    }else if (this->Type == INTC){
+        return true;
+    }else if (this->Type == INTEGER){
+        return true;
+    }else {
+        return false;
+    }
 }
 
 Token::~Token() = default;
