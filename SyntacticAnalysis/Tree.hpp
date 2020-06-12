@@ -23,6 +23,7 @@ private:
     int line;
     string NodeKind;
     string value;
+    Word real_Kind;
 public:
     TreeNode();
     void setKind(const string& _kind);
@@ -37,6 +38,10 @@ public:
     const string &getNodeKind() const;
 
     const string &getValue() const;
+
+    Word getRealKind() const;
+
+    void setRealKind(Word realKind);
 };
 
 TreeNode::TreeNode() {
@@ -72,12 +77,22 @@ void TreeNode::setNodeKind(const string &nodeKind) {
     NodeKind = nodeKind;
 }
 
+Word TreeNode::getRealKind() const {
+    return real_Kind;
+}
+
+void TreeNode::setRealKind(Word realKind) {
+    real_Kind = realKind;
+}
+
 
 class TreeDraw{
 private:
     queue<TreeNode> GrammarStack;
     queue<TreeNode> OperandStack;
     vector<Token> TokenList;
+    int Grammarsuojin = 1;
+    int Operandsuojin = 2;
 public:
     void setTokenList(vector<Token> p){
         this->TokenList = p;
@@ -89,12 +104,14 @@ public:
                 a.setValue(item.getValue());
                 a.setKind(transformE2S(item.getType()));
                 a.setLine(item.getLine());
+                a.setRealKind(item.getType());
                 GrammarStack.push(a);
             } else if (item.isOp()){
                 TreeNode a = TreeNode();
                 a.setValue(item.getValue());
                 a.setKind(transformE2S(item.getType()));
                 a.setLine(item.getLine());
+                a.setRealKind(item.getType());
                 OperandStack.push(a);
             }
         }
@@ -105,21 +122,44 @@ public:
             cout << " ";
         }
     }
+
+    void PrintHead(TreeNode a){
+        if (a.getRealKind() == TYPE){
+            cout << "TypeK" ;
+        }else if (a.getRealKind() == PROCEDURE){
+            cout << "ProcDeck" ;
+        }else if (a.getRealKind() == PROGRAM){
+            cout << "PheadK" << " ";
+        }else if (a.getRealKind() == VAR){
+            cout << "VarK" << " ";
+        }else if (a.getRealKind() == BEGIN ){
+            this->Operandsuojin++;
+            this->Grammarsuojin++;
+            cout << "StmLk" ;
+        }else if (a.getRealKind() == END || a.getRealKind() == ENDWH){
+            this->Grammarsuojin--;
+            this->Operandsuojin--;
+            cout << a.getNodeKind() << " ";
+        }
+        else{
+            cout << a.getNodeKind() << " ";
+        }
+    }
+
     void print(){
         int line = 1;
-        int Grammarsuojin = 1;
-        int Operandsuojin = 2;
         cout << "Prok" << endl;
         for (; line < 40; line++) {
             while (GrammarStack.front().getLine() == line){
                 printBlank(Grammarsuojin);
-                cout << GrammarStack.front().getNodeKind()<< " ";
+                PrintHead(GrammarStack.front());
                 GrammarStack.pop();
                 cout << endl;
             }
             while (OperandStack.front().getLine() == line){
                 printBlank(Operandsuojin);
-                cout << OperandStack.front().getNodeKind()<<" " << OperandStack.front().getValue();
+                PrintHead(OperandStack.front());
+                cout <<" " << OperandStack.front().getValue();
                 OperandStack.pop();
                 cout << endl;
             }

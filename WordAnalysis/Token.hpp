@@ -119,48 +119,48 @@ unsigned short Token::getLine() const {
 }
 
 bool Token::isGrammer() {
-    if (this->Type == PROGRAM){
+    if (this->Type == PROGRAM) {
         return true;
-    }else if (this->Type == TYPE){
+    } else if (this->Type == TYPE) {
         return true;
-    }else if (this->Type == VAR){
+    } else if (this->Type == VAR) {
         return true;
-    }else if (this->Type == PROCEDURE){
+    } else if (this->Type == PROCEDURE) {
         return true;
-    }else if (this->Type == BEGIN){
+    } else if (this->Type == BEGIN) {
         return true;
-    }else if (this->Type == END){
+    } else if (this->Type == END) {
         return true;
-    }else if (this->Type == ARRAY){
+    } else if (this->Type == ARRAY) {
         return true;
-    }else if (this->Type == RECORD){
+    } else if (this->Type == RECORD) {
         return true;
-    }else if (this->Type == IF){
+    } else if (this->Type == IF) {
         return true;
-    }else if (this->Type == THEN){
+    } else if (this->Type == THEN) {
         return true;
-    }else if (this->Type == ELSE){
+    } else if (this->Type == ELSE) {
         return true;
-    }else if (this->Type == FI){
+    } else if (this->Type == FI) {
         return true;
-    }else if (this->Type == WHILE){
+    } else if (this->Type == WHILE) {
         return true;
-    }else if (this->Type == DO){
+    } else if (this->Type == DO) {
         return true;
-    }else if (this->Type == ENDWH){
+    } else if (this->Type == ENDWH) {
         return true;
-    }else if (this->Type == READ){
+    } else if (this->Type == READ) {
         return true;
-    }else if (this->Type == WRITE){
+    } else if (this->Type == WRITE) {
         return true;
-    }else if (this->Type == RETURN){
+    } else if (this->Type == RETURN) {
         return true;
-    }else if (this->Type == ASSIGN){
-
-    }
-    else
+    } else if (this->Type == ASSIGN) {
+        return true;
+    } else
         return false;
 }
+
 
 bool Token::isOp() {
     if (this->Type == ADD){
